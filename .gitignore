@@ -1,0 +1,10 @@
+target/
+.settings
+*.log
+.project
+.classpath
+settings.xml
+.mvn
+mvnw
+mvnw.cmd
+help.md

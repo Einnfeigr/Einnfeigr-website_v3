@@ -1,0 +1,65 @@
+$headerHeight=4em
+$footerHeight=3em
+$darkblue=rgb(30, 35, 40)
+
+darkblue-opaque(opacity)
+	rgba(30, 35, 40, opacity)
+
+
+@font-face
+	font-family: Old english
+	font-style: normal
+	font-weight: normal
+	src: url(/font/OldEnglish.ttf)
+
+@font-face
+	font-family: Nunito
+	font-style: normal
+	font-weight: normal
+	src: url(/font/Nunito-Regular.ttf)	
+
+@font-face
+	font-family: Nunito
+	font-style: normal
+	font-weight:400
+	src: url(/font/Nunito-Light.ttf)
+
+@import "themes.styl"
+
+body 
+	margin: 0
+	max-width: 100vw
+	overflow-x: hidden
+	font-family: Nunito
+	@import "header.styl"
+	@import "footer.styl"
+	> hr
+		width: 75%
+		margin: 0.5em auto
+		opacity: 0.35		
+		
+a 			
+	text-decoration: underline
+	color: inherit
+	
+a.nodec 
+	text-decoration: none
+	
+.centered 
+	text-align: center
+	margin: auto
+
+.content
+	padding: 15px
+	max-width: 65%
+	margin: auto
+	h1 
+		left: 0
+		width: 100%
+		font-size: 2.3em
+		position: relative
+		text-align: center
+
+.layout 
+	height: auto
+	min-height: 100vh

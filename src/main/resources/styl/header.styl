@@ -1,0 +1,63 @@
+> header
+	top: 0
+	z-index: 10
+	padding: 10px
+	padding-right: 35px
+	display: flex
+	flex-flow: row
+	position: sticky
+	min-height: $headerHeight
+	height: auto
+	-webkit-backdrop-filter: blur(1.7px)
+	-o-backdrop-filter: blur(1.7px)
+	-moz-backdrop-filter: blur(1.7px)
+	backdrop-filter: blur(1.7px)
+	box-shadow: 1px 0 10px -3px rgba(0,0,0,0.3)
+	h2
+		margin: auto
+		font-size: 2.3em
+		margin-left: 1em
+		margin-right: 1em
+		font-family: Old english
+	.links
+		margin-left: 3.5em
+		display: flex
+		flex-flow: row
+		align-items: center
+		a
+			margin: auto
+			margin-left: 1em
+			margin-right: 1em
+			font-size: 1.2em
+	.placeholder
+		width: 100%
+	.langs
+		display: flex
+		align-items: center
+		position: relative
+		right: 0
+		select
+			appearance: none
+			background-color: transparent 
+			border: none
+			padding: 0 0.5em 0 0
+			width: auto
+			font-family: inherit
+			font-size: inherit
+			cursor: inherit
+			line-height: inherit
+			outline: none
+			color: inherit
+			::ms-expand
+				display: none	
+		.arrow 
+			position: absolute
+			z-index: -1
+			right: 0
+			font-size: 0.7em
+	.themeSwitch
+		height: 1.5em
+		min-width: 1.5em
+		background-size: cover
+		margin: auto 1em
+		cursor: pointer

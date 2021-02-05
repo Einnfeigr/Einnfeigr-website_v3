@@ -1,0 +1,2 @@
+cd /home/studiedlist/Documents/projects/site/website_III/src/main/resources
+stylus -w styl/common.styl -o static/css/style.css -w styl/error.styl -o static/css/error.css -w styl/main.styl -o static/css/main.css
