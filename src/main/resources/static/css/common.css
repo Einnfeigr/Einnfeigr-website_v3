@@ -16,56 +16,6 @@
   font-weight: 400;
   src: url("/font/Nunito-Light.ttf");
 }
-body.dark {
-  background: #1e2328;
-  color: #fff;
-}
-body.dark > header {
-  background: rgba(30,35,40,0.45);
-}
-body.dark > header .themeSwitch {
-  background-image: url("/img/sun.png");
-}
-body.dark > hr {
-  border-color: #fff;
-}
-body.dark > footer {
-  background: inherit;
-}
-body.dark > footer .github {
-  background-image: url("/img/github_light.png");
-}
-body.dark > footer .email {
-  background-image: url("/img/email_light.png");
-}
-body.dark > footer .youtube {
-  background-image: url("/img/yt_light.png");
-}
-body.light {
-  background: #fff;
-  color: #141717;
-}
-body.light > header {
-  background: rgba(255,255,255,0.45);
-}
-body.light > header .themeSwitch {
-  background-image: url("/img/moon.png");
-}
-body.light > hr {
-  border-color: #000;
-}
-body.light > footer {
-  background: inherit;
-}
-body.light > footer .github {
-  background-image: url("/img/github_dark.png");
-}
-body.light > footer .email {
-  background-image: url("/img/email_dark.png");
-}
-body.light > footer .youtube {
-  background-image: url("/img/yt_dark.png");
-}
 body {
   margin: 0;
   max-width: 100vw;

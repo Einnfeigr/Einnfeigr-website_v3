@@ -1,0 +1,25 @@
+body.light {
+  background: #fff;
+  color: #141717;
+}
+body.light > header {
+  background: rgba(255,255,255,0.45);
+}
+body.light > header .themeSwitch {
+  background-image: url("/img/moon.png");
+}
+body.light > hr {
+  border-color: #000;
+}
+body.light > footer {
+  background: inherit;
+}
+body.light > footer .github {
+  background-image: url("/img/github_dark.png");
+}
+body.light > footer .email {
+  background-image: url("/img/email_dark.png");
+}
+body.light > footer .youtube {
+  background-image: url("/img/yt_dark.png");
+}
