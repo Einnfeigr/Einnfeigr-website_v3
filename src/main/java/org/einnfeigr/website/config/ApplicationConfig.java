@@ -12,8 +12,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.MarkdownHelper;
@@ -27,7 +27,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
 
 	@Bean
 	public LocaleResolver localeResolver() {
-		SessionLocaleResolver resolver = new SessionLocaleResolver();
+		CookieLocaleResolver resolver = new CookieLocaleResolver();
 		resolver.setDefaultLocale(Locale.US);
 		return resolver;
 	}
@@ -58,7 +58,8 @@ public class ApplicationConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(deviceHandlerMethodArgumentResolver()); 
-        argumentResolvers.add(new ArgumentResolver(deviceHandlerMethodArgumentResolver())); 
+        argumentResolvers.add(new ArgumentResolver(deviceHandlerMethodArgumentResolver(), 
+        		localeResolver())); 
     }
     
 	@Bean
