@@ -22,3 +22,5 @@ jobs:
         java-version: 11
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+      env:
+        dropbox_access_token: ${{ secrets.DROPBOX_ACCESS_TOKEN }} 
