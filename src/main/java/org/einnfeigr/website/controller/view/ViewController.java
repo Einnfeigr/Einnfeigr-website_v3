@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class ViewController {
 	
-	@GetMapping(value={"/", "/info", "/contacts", "/about", "/fridrum", "/faq"})
+	@GetMapping(value={"/", "/info", "/about", "/fridrum", "/faq"})
 	ModelAndView main(HttpServletRequest request, ControllerUtils builder) throws Exception {
 		String name = request.getRequestURI();
 		name = name.length() == 1 ? "main" : name.replace("/", "");

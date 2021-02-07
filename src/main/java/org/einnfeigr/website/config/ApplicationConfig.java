@@ -64,9 +64,6 @@ public class ApplicationConfig implements WebMvcConfigurer {
     
 	@Bean
 	public HandlebarsViewResolver handlebars() {
-		if(handlebars != null) {
-			return handlebars;
-		}
 		ClassPathTemplateLoader loader = new ClassPathTemplateLoader("/templates", ".md");
 		Handlebars hbs = new Handlebars(loader);
 		handlebars = new HandlebarsViewResolver(hbs);
