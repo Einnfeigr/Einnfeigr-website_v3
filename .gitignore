@@ -7,4 +7,5 @@ settings.xml
 .mvn
 mvnw
 mvnw.cmd
-help.md
+HELP.md
+*.css
