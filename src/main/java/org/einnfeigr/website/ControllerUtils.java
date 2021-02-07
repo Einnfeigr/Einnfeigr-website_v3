@@ -19,8 +19,11 @@ public class ControllerUtils {
 
 	private static final List<String> availableLangs = new ArrayList<>();
 	
+	
 	private static final String LIGHT_THEME_NAME = "light";
 	private static final String DARK_THEME_NAME = "dark";
+	
+	private static final String DEFAULT_THEME = LIGHT_THEME_NAME;
 	
 	private static final String THEME_COOKIE_NAME = "theme";
 	private static final String THEME_PARAM_NAME = "theme";
@@ -67,6 +70,7 @@ public class ControllerUtils {
 	
 	public ModelAndView buildMav(String path, Object...params) throws FileNotFoundException {
 		String theme = parseTheme(request, response);
+		setThemeCookie(response, theme);
 		ModelAndView mav = new ModelAndView(path);
 		Map<String, Object> data = mav.getModel();
 		data.put("locale", locale.getLanguage());
@@ -80,26 +84,24 @@ public class ControllerUtils {
 		return mav;
 	}
 
-	//TODO refactor
 	private static String parseTheme(HttpServletRequest request, HttpServletResponse response) {
-		String theme = null;
-		if(request.getParameter(THEME_PARAM_NAME) != null) {
-			theme = request.getParameter(THEME_PARAM_NAME);
-			response.addCookie(new Cookie(THEME_COOKIE_NAME, theme));
+		String theme;
+		if((theme = request.getParameter(THEME_PARAM_NAME)) != null) {
+			return theme;
 		}
-		if(request.getCookies() != null && theme == null) {
-			for(Cookie cookie : request.getCookies()) {
-				if(cookie.getName().equals(THEME_COOKIE_NAME)) {
-					theme = cookie.getValue();
-					break;
-				}
+		if(request.getCookies() == null) {
+			return DEFAULT_THEME;
+		}
+		for(Cookie cookie : request.getCookies()) {
+			if(cookie.getName().equals(THEME_COOKIE_NAME)) {
+				return cookie.getValue();
 			}
 		}
-		if(theme == null) {
-			theme = LIGHT_THEME_NAME;
-			response.addCookie(new Cookie(THEME_COOKIE_NAME, theme));
-		}
-		return theme;
+		return DEFAULT_THEME;
+	}
+	
+	private static void setThemeCookie(HttpServletResponse response, String theme) {
+		response.addCookie(new Cookie(THEME_COOKIE_NAME, theme));
 	}
 	
 	private static Map<String, Object> arrayToMap(Object[] params) {
