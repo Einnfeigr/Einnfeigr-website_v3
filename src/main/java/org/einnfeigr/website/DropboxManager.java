@@ -23,7 +23,7 @@ public class DropboxManager {
 
 	public DropboxManager() {
 		DbxRequestConfig config = DbxRequestConfig.newBuilder("einnfeigr website").build();
-		client = new DbxClientV2(config, System.getenv("INPUT_DROPBOX_ACCESS_TOKEN"));
+		client = new DbxClientV2(config, System.getenv("DROPBOX_ACCESS_TOKEN"));
 	}
 	
 	public byte[] readFileContent(String path) 
