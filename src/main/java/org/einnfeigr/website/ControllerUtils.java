@@ -20,13 +20,17 @@ public class ControllerUtils {
 	private static final List<String> availableLangs = new ArrayList<>();
 	
 	
-	private static final String LIGHT_THEME_NAME = "light";
-	private static final String DARK_THEME_NAME = "dark";
+	public static final String LIGHT_THEME_NAME = "light";
+	public static final String DARK_THEME_NAME = "dark";
 	
-	private static final String DEFAULT_THEME = LIGHT_THEME_NAME;
+	public static final String DEFAULT_THEME = LIGHT_THEME_NAME;
+	public static final String DEFAULT_VERSION = "desktop";
 	
-	private static final String THEME_COOKIE_NAME = "theme";
-	private static final String THEME_PARAM_NAME = "theme";
+	public static final String THEME_COOKIE_NAME = "theme";
+	public static final String VERSION_COOKIE_NAME = "ver";
+	
+	public static final String THEME_PARAM_NAME = "theme";
+	public static final String VERSION_PARAM_NAME = "ver";
 	
 	private HttpServletRequest request;
 	private HttpServletResponse response;
@@ -58,7 +62,8 @@ public class ControllerUtils {
 		return langs;
 	}
 	
-	public ModelAndView buildMav(String path, HttpStatus status) throws FileNotFoundException {
+	public ModelAndView buildMav(String path, HttpStatus status, Object...params) 
+			throws FileNotFoundException {
 		ModelAndView mav = buildMav(path, locale, device, request, response, "");
 		mav.setStatus(status);
 		return mav;
@@ -70,11 +75,11 @@ public class ControllerUtils {
 	
 	public ModelAndView buildMav(String path, Object...params) throws FileNotFoundException {
 		String theme = parseTheme(request, response);
-		setThemeCookie(response, theme);
+		String version = parseVersion(request, response);
 		ModelAndView mav = new ModelAndView(path);
 		Map<String, Object> data = mav.getModel();
 		data.put("locale", locale.getLanguage());
-		data.put("isMobile", !device.isNormal());
+		data.put("isMobile", !device.isNormal() || "mobile".equals(version));
 		data.put("langs", getSortedLangs(locale));
 		data.put("availableTheme", theme.equals(DARK_THEME_NAME) 
 				? LIGHT_THEME_NAME : DARK_THEME_NAME);
@@ -83,10 +88,28 @@ public class ControllerUtils {
 		data.putAll(arrayToMap(params));
 		return mav;
 	}
-
+	
+	private static String parseVersion(HttpServletRequest request, HttpServletResponse response) {
+		String version;
+		if((version = request.getParameter(VERSION_PARAM_NAME)) != null) {
+			response.addCookie(new Cookie(VERSION_COOKIE_NAME, version));
+			return version;
+		}
+		if(request.getCookies() == null) {
+			return DEFAULT_VERSION;
+		}
+		for(Cookie cookie : request.getCookies()) {
+			if(cookie.getName().equals(VERSION_COOKIE_NAME)) {
+				return cookie.getValue();
+			}
+		}
+		return DEFAULT_VERSION;
+	}
+	
 	private static String parseTheme(HttpServletRequest request, HttpServletResponse response) {
 		String theme;
 		if((theme = request.getParameter(THEME_PARAM_NAME)) != null) {
+			response.addCookie(new Cookie(THEME_COOKIE_NAME, theme));
 			return theme;
 		}
 		if(request.getCookies() == null) {
@@ -98,10 +121,6 @@ public class ControllerUtils {
 			}
 		}
 		return DEFAULT_THEME;
-	}
-	
-	private static void setThemeCookie(HttpServletResponse response, String theme) {
-		response.addCookie(new Cookie(THEME_COOKIE_NAME, theme));
 	}
 	
 	private static Map<String, Object> arrayToMap(Object[] params) {
