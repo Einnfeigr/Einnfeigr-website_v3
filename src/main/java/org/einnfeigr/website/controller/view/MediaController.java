@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.einnfeigr.website.DropboxManager;
@@ -22,7 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,20 +34,22 @@ public class MediaController {
 	@Autowired
 	private DropboxManager dropboxManager;
 	
-	private final static String DEFAULT_MEDIA_PATH = "/media/";
 	public final static int CACHE_UPDATE_RATE = 6000;
 	public static long CACHE_AGE_SECONDS = 1800;
 	
+	public final static String MAPPING_PATH = "/fridrum/media/";
 	
 	private Map<String, byte[]> mediaCache = new HashMap<>();
 	private Map<String, LocalDateTime> cacheExpiration = new HashMap<>();
 	
-	@GetMapping("/fridrum/media/{path}")
+	//TODO refactor
+	@GetMapping(MAPPING_PATH+"**")
 	@ResponseBody
-	ResponseEntity<byte[]> getMedia(@PathVariable String path, HttpServletResponse response) 
+	ResponseEntity<byte[]> getMedia(HttpServletRequest request, HttpServletResponse response) 
 			throws FileNotFoundException, DbxException, IOException {
+		String path = request.getRequestURI().replace(MAPPING_PATH, "");
 		byte[] body = mediaCache.containsKey(path) 
-				? mediaCache.get(path) : dropboxManager.readFileContent(DEFAULT_MEDIA_PATH+path); 
+				? mediaCache.get(path) : dropboxManager.readFileContent(path); 
 		String mediaType = URLConnection.getFileNameMap().getContentTypeFor(path);
 		CacheControl cacheControl = CacheControl.empty();
 		cacheControl.cachePublic();
