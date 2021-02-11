@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.CreateFolderErrorException;
+import com.dropbox.core.v2.files.DeleteErrorException;
 import com.dropbox.core.v2.files.DownloadErrorException;
+import com.dropbox.core.v2.files.ListFolderErrorException;
 import com.dropbox.core.v2.files.ListFolderResult;
-import com.dropbox.core.v2.files.Metadata;
 
 @Component
 public class DropboxManager {
@@ -39,7 +41,8 @@ public class DropboxManager {
 		}
 	}
 	
-	public List<Metadata> readFolder(String path) throws DbxException {
+	public List<ListFolderResult> readFolder(String path) 
+			throws DbxException, FileNotFoundException {
 		try {
 			List<ListFolderResult> results = new ArrayList<>();
 			ListFolderResult result = client.files().listFolder(path);
@@ -48,11 +51,12 @@ public class DropboxManager {
 				result = client.files().listFolderContinue(result.getCursor());
 				results.add(result);
 			} 
-			List<Metadata> metadata = new ArrayList<>();
-			results.forEach((r) -> {
-				metadata.addAll(r.getEntries());
-			});
-			return metadata;
+			return results;
+		} catch (ListFolderErrorException e) {
+			if(e.errorValue.isPath()) {
+				throw new FileNotFoundException(e.getMessage());
+			}
+			throw e;
 		} catch (DbxException e) {
 			throw e;
 		}
@@ -62,6 +66,16 @@ public class DropboxManager {
 		try(OutputStream os =  client.files().upload(formatPath(path)).getOutputStream()) {
 			os.write(bytes);
 		}
+	}
+	
+	public void createFolder(String path) throws CreateFolderErrorException, DbxException {
+		path = path.startsWith("/") ? path : "/"+path;
+		client.files().createFolderV2(path);
+	}
+	
+	public void delete(String path) throws DeleteErrorException, DbxException {
+		path = path.startsWith("/") ? path : "/"+path;
+		client.files().deleteV2(path);
 	}
 	
 	private String formatPath(String path) {
