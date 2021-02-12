@@ -67,8 +67,10 @@ public class ControllerUtils {
 	}
 	
 	public ModelAndView buildMav(String path, Object...params) throws FileNotFoundException {
-		String theme = parseTheme(request, response);
-		String version = parseVersion(request, response);
+		String theme = parseParam(THEME_COOKIE_NAME, THEME_PARAM_NAME);
+		theme = theme == null ? DEFAULT_THEME : theme;
+		String version = parseParam(VERSION_COOKIE_NAME, VERSION_PARAM_NAME);
+		version = version == null ? DEFAULT_VERSION : version;
 		ModelAndView mav = new ModelAndView(path);
 		Map<String, Object> data = mav.getModel();
 		data.put("locale", locale.getLanguage());
@@ -82,38 +84,21 @@ public class ControllerUtils {
 		return mav;
 	}
 	
-	private static String parseVersion(HttpServletRequest request, HttpServletResponse response) {
-		String version;
-		if((version = request.getParameter(VERSION_PARAM_NAME)) != null) {
-			response.addCookie(new Cookie(VERSION_COOKIE_NAME, version));
-			return version;
+	private String parseParam(String cookieName, String paramName) {
+		String param;
+		if((param = request.getParameter(paramName)) != null) {
+			response.addCookie(new Cookie(cookieName, param));
+			return param;
 		}
 		if(request.getCookies() == null) {
-			return DEFAULT_VERSION;
+			return null;
 		}
 		for(Cookie cookie : request.getCookies()) {
-			if(cookie.getName().equals(VERSION_COOKIE_NAME)) {
+			if(cookie.getName().equals(cookieName)) {
 				return cookie.getValue();
 			}
 		}
-		return DEFAULT_VERSION;
-	}
-	
-	private static String parseTheme(HttpServletRequest request, HttpServletResponse response) {
-		String theme;
-		if((theme = request.getParameter(THEME_PARAM_NAME)) != null) {
-			response.addCookie(new Cookie(THEME_COOKIE_NAME, theme));
-			return theme;
-		}
-		if(request.getCookies() == null) {
-			return DEFAULT_THEME;
-		}
-		for(Cookie cookie : request.getCookies()) {
-			if(cookie.getName().equals(THEME_COOKIE_NAME)) {
-				return cookie.getValue();
-			}
-		}
-		return DEFAULT_THEME;
+		return null;
 	}
 	
 	private static Map<String, Object> arrayToMap(Object[] params) {
