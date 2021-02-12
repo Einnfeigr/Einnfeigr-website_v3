@@ -24,3 +24,7 @@ jobs:
       run: mvn -B package --file pom.xml
       env:
         DROPBOX_ACCESS_TOKEN: ${{ secrets.DROPBOX_ACCESS_TOKEN }} 
+    - name: Codacy Coverage Reporter
+      uses: codacy/codacy-coverage-reporter-action@0.2.0
+      with:
+        project-token: ${{ secrets.CODACY_ACCESS_TOKEN }} 
