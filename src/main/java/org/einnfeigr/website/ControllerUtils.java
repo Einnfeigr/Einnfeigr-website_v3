@@ -62,13 +62,6 @@ public class ControllerUtils {
 		return langs;
 	}
 	
-	public ModelAndView buildMav(String path, HttpStatus status, Object...params) 
-			throws FileNotFoundException {
-		ModelAndView mav = buildMav(path, locale, device, request, response, "");
-		mav.setStatus(status);
-		return mav;
-	}
-	
 	public ModelAndView buildMav(String path) throws FileNotFoundException {
 		return buildMav(path, locale, device, request, response, "");
 	}
@@ -125,11 +118,10 @@ public class ControllerUtils {
 	
 	private static Map<String, Object> arrayToMap(Object[] params) {
 		Map<String, Object> map = new HashMap<>();
-		if(params.length < 1) {
-			return map;
-		}
-		for(int x = 1; x < params.length; ++x) {
-			map.put(params[x-1].toString(), params[x]);
+		if(params.length > 0) {
+			for(int x = 1; x < params.length; ++x) {
+				map.put(params[x-1].toString(), params[x]);
+			}
 		}
 		return map;
 	}
