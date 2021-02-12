@@ -29,31 +29,35 @@ public class AlbumController {
 	
 	public Album parseAlbum(Locale locale, String path) throws DbxException, FileNotFoundException {
 		Album album = new Album(path);
-		fillInAlbum(locale, album, dropboxManager.readFolder(path));
+		album.setLocale(locale);
+		fillInAlbum(album, dropboxManager.readFolder(path));
 		for(Album child : album.getAlbums()) {
-			fillInAlbum(locale, child, dropboxManager.readFolder(child.getDropboxPath()));
+			fillInAlbum(child, dropboxManager.readFolder(child.getDropboxPath()));
 		}
 		return album;
 	}
 	
-	//TODO refactor
-	private void fillInAlbum(Locale locale, Album album, List<ListFolderResult> results) {
+	private void fillInAlbum(Album album, List<ListFolderResult> results) {
 		for(ListFolderResult result : results) {
 			for(Metadata metadata : result.getEntries()) {
-				String path = metadata.getPathDisplay();
 				if(metadata instanceof FileMetadata) {
-					if(isImage(metadata.getName())) {
-						album.addImage(new Image(path, metadata.getName()));
-						continue;
-					} 
-					if(metadata.getName().contains(LOCALIZED_NAMES_FILE)) {
-						album.setLocalizedNames(parseLocalizedNames(path));
-						album.setLocale(locale);
-					}
+					addFile(metadata, album);
 				} else if(metadata instanceof FolderMetadata) {
-					album.addAlbum(new Album(path, metadata.getName()));
+					Album child = new Album(metadata.getPathDisplay(), metadata.getName());
+					child.setLocale(album.getLocale());
+					album.addAlbum(child);
 				}
 			}
+		}
+	}
+	
+	private void addFile(Metadata metadata, Album album) {
+		String path = metadata.getPathDisplay();
+		String name = metadata.getName();
+		if(isImage(metadata.getName())) {
+			album.addImage(new Image(path, name));
+		} else if(name.contains(LOCALIZED_NAMES_FILE)) {
+			album.setLocalizedNames(parseLocalizedNames(path));
 		}
 	}
 	

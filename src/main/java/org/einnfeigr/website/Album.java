@@ -18,6 +18,7 @@ public class Album {
 	private Properties localizedNames = new Properties();
 	private List<Album> albums = new ArrayList<>();
 	private List<Image> images = new ArrayList<>();
+	private Locale locale;
 	
 	public final static String PATH_HOME = "/fridrum/albums";
 	
@@ -34,7 +35,7 @@ public class Album {
 	}
 	
 	public void setLocale(Locale locale) {
-		localizedName = localizedNames.getOrDefault(locale.getLanguage(), name).toString();
+		this.locale = locale;
 	}
 	
 	private String parseName(String path) {
@@ -83,6 +84,13 @@ public class Album {
 
 	public void setLocalizedNames(Properties localizedNames) {
 		this.localizedNames = localizedNames;
+		if(locale != null) {
+			localizedName = localizedNames.getOrDefault(locale.getLanguage(), name).toString();
+		}
+	}
+
+	public Locale getLocale() {
+		return locale;
 	}
 	
 }
