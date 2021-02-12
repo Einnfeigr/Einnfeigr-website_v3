@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.einnfeigr.website.ArgumentResolver;
+import org.einnfeigr.website.FileMarkdownHelper;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mobile.device.DeviceHandlerMethodArgumentResolver;
@@ -67,7 +68,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
 		ClassPathTemplateLoader loader = new ClassPathTemplateLoader("/templates", ".hbs");
 		Handlebars hbs = new Handlebars(loader);
 		handlebars = new HandlebarsViewResolver(hbs);
-		handlebars.registerHelper("md", new MarkdownHelper());
+		handlebars.registerHelper("md", new FileMarkdownHelper());
 		handlebars.setCache(false);
 		return handlebars;
 	}
