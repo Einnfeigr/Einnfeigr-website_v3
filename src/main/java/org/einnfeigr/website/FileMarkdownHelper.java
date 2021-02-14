@@ -18,17 +18,22 @@ public class FileMarkdownHelper implements Helper<Object> {
 	private final static Logger log = LoggerFactory.getLogger(FileMarkdownHelper.class);
 	private final static String TEXT_PATH = "/text/%s/";
 	private final static String TEXT_EXTENSION = ".md";
+	private final static PegDownProcessor markdownProcessor = new PegDownProcessor();
+	private final static Handlebars handlebars = new Handlebars();
 	
 	@Override
-	public Object apply(Object context, Options options) {
+	public Object apply(Object context, Options options) throws IOException {
 		String filename = formatFilename(context.toString());
 		if(options.get("locale") == null) {
 			return null;
 		}
 		String path = String.format(TEXT_PATH+filename, options.get("locale").toString());
 		String content = readFile(path);
-	    PegDownProcessor processor = new PegDownProcessor();
-	    return new Handlebars.SafeString(processor.markdownToHtml(content));
+	    content = markdownProcessor.markdownToHtml(content);
+	    if(content.contains("{{") && content.contains("}}")) {
+	    	content = handlebars.compileInline(content).apply(options.context);
+	    }
+	    return new Handlebars.SafeString(content);
 	}
 	
 	private String formatFilename(String name) {

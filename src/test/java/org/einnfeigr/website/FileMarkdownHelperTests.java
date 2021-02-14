@@ -69,4 +69,12 @@ public class FileMarkdownHelperTests {
 		params.put("locale", "ru");
 		assertEquals(outputRu, template.apply(params));			
 	}
+	
+	@Test
+	void testHandlebarsInMarkdown() throws IOException {
+		String output = "<h1>Test</h1>";
+		String text = "{{md \"testhbs.md\" }}";
+		params.put("text", "Test");
+		assertEquals(output, hbs.compileInline(text).apply(params));
+	}
 }
