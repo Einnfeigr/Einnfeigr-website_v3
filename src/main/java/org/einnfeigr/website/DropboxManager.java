@@ -1,9 +1,9 @@
 package org.einnfeigr.website;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +17,17 @@ import com.dropbox.core.v2.files.DeleteErrorException;
 import com.dropbox.core.v2.files.DownloadErrorException;
 import com.dropbox.core.v2.files.ListFolderErrorException;
 import com.dropbox.core.v2.files.ListFolderResult;
+import com.dropbox.core.v2.files.UploadUploader;
 
 @Component
 public class DropboxManager {
 
 	private DbxClientV2 client;
 
-	public DropboxManager() {
+	public final static String NOTES_FOLDER = "/notes";
+	public final static String ALBUMS_FOLDER = "/albums";
+		
+	public DropboxManager() throws ListFolderErrorException, DbxException {
 		DbxRequestConfig config = DbxRequestConfig.newBuilder("einnfeigr website").build();
 		client = new DbxClientV2(config, System.getenv("DROPBOX_ACCESS_TOKEN"));
 	}
@@ -63,19 +67,16 @@ public class DropboxManager {
 	}
 	
 	public void writeFileContent(String path, byte[] bytes) throws DbxException, IOException {
-		try(OutputStream os =  client.files().upload(formatPath(path)).getOutputStream()) {
-			os.write(bytes);
-		}
+		UploadUploader loader = client.files().upload(formatPath(path));
+		loader.uploadAndFinish(new ByteArrayInputStream(bytes));
 	}
 	
 	public void createFolder(String path) throws CreateFolderErrorException, DbxException {
-		path = path.startsWith("/") ? path : "/"+path;
-		client.files().createFolderV2(path);
+		client.files().createFolderV2(formatPath(path));
 	}
 	
-	public void delete(String path) throws DeleteErrorException, DbxException {
-		path = path.startsWith("/") ? path : "/"+path;
-		client.files().deleteV2(path);
+	public void delete(String path) throws DeleteErrorException, DbxException {;
+		client.files().deleteV2(formatPath(path));
 	}
 	
 	private String formatPath(String path) {
