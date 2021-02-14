@@ -10,18 +10,17 @@ import javax.servlet.http.Cookie;
 
 import org.assertj.core.util.Lists;
 import org.einnfeigr.website.controller.view.MediaController;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.pegdown.PegDownProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -41,22 +40,24 @@ class WebsiteApplicationTests {
 	private final static String HOME_ADDRESS = "/";
 	private final static String MOBILE_CHECK_TEXT = "<meta name=\"viewport";
 	
-	private final static Logger log = LoggerFactory.getLogger(WebsiteApplicationTests.class);
 	public final static String MOBILE_USER_AGENT = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V " 
 			+ "Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile " 
 			+ "Safari/537.36";
 	
+	private String hash;
+	
+	@BeforeEach
+	void init() {
+		hash = String.valueOf(mvc.hashCode());
+	}
+	
 	@Test
-	void checkPages() {
+	void checkPages() throws Exception {
 		List<String> addresses = Lists.list("", "info", "fridrum", "about", "faq", "fridrum/notes",
 				"fridrum/albums");
 		for(String address : addresses) {
-			try {
-				mvc.perform(MockMvcRequestBuilders.get(address))
-					.andExpect(MockMvcResultMatchers.status().isOk());
-			} catch (Exception e) {
-				log.error("Error accessing "+address+"page", e);
-			}
+			mvc.perform(MockMvcRequestBuilders.get("/"+address))
+				.andExpect(MockMvcResultMatchers.status().isOk());
 		}
 	}
 	
@@ -178,9 +179,7 @@ class WebsiteApplicationTests {
 	
 	@Test
 	void createAlbum() throws Exception {
-		String hash = ""+mvc.hashCode();
 		try {
-		
 			dropboxManager.createFolder("albums/test"+hash);
 			mvc.perform(MockMvcRequestBuilders.get("/fridrum/albums/test"+hash))
 				.andExpect(MockMvcResultMatchers.status().isOk());
@@ -188,6 +187,30 @@ class WebsiteApplicationTests {
 			dropboxManager.delete("albums/test"+hash);
 			mvc.perform(MockMvcRequestBuilders.get("/fridrum/albums/test"+hash))
 				.andExpect(MockMvcResultMatchers.status().isNotFound());
+		}
+	}
+
+	@Test
+	void createLocalizedNote() throws Exception {
+		String filename = "test"+hash;
+		String path = "notes/%s/%s.md";
+		createAndTestNote(filename, String.format(path, "en", filename), "# Test", "en");
+		createAndTestNote(filename, String.format(path, "ru", filename), "# Тест", "ru");		
+	}
+	
+	void createAndTestNote(String name, String path, String content, String lang) throws Exception {
+		String output = new PegDownProcessor().markdownToHtml(content);
+		try {
+			mvc.perform(MockMvcRequestBuilders.get("/fridrum/notes/"+name).param("lang", lang))
+				.andExpect(MockMvcResultMatchers.status().isNotFound());			
+			dropboxManager.writeFileContent(path, content.getBytes());
+			mvc.perform(MockMvcRequestBuilders.get("/fridrum/notes/"+name).param("lang", lang))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().string(containsString(output)));
+		} finally {
+			dropboxManager.delete(path);
+			mvc.perform(MockMvcRequestBuilders.get("/fridrum/notes/"+name).param("lang", lang))
+				.andExpect(MockMvcResultMatchers.status().isNotFound());			
 		}
 	}
 	
