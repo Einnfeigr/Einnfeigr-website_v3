@@ -1,4 +1,4 @@
-package org.einnfeigr.website;
+package org.einnfeigr.website.pojo;
 
 public class Image {
 
