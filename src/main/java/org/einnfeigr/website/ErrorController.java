@@ -8,9 +8,10 @@ import javax.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -20,8 +21,8 @@ public class ErrorController extends ResponseEntityExceptionHandler {
 	
 	private final static Logger log = LoggerFactory.getLogger(ErrorController.class);
 	
-	@ExceptionHandler(Exception.class)
-	public ModelAndView handle(Exception e, ControllerUtils builder)
+	@ExceptionHandler(Throwable.class)
+	public ResponseEntity<Object> handle(Exception e, WebRequest request)
 			throws IOException, ServletException {
 		log.info("Handler resolved exception", e);
 		String path = "err";
@@ -34,7 +35,7 @@ public class ErrorController extends ResponseEntityExceptionHandler {
 			responseStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 			error404 = false;
 		}
-		return builder.buildMav(path, responseStatus, "error.404", error404);
+		return new ResponseEntity<>("error", responseStatus);
 	}
 
 	
