@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
+import org.einnfeigr.website.pojo.Album;
+import org.einnfeigr.website.pojo.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.files.FileMetadata;
-import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
 
@@ -42,7 +43,7 @@ public class AlbumController {
 			for(Metadata metadata : result.getEntries()) {
 				if(metadata instanceof FileMetadata) {
 					addFile(metadata, album);
-				} else if(metadata instanceof FolderMetadata) {
+				} else {
 					Album child = new Album(metadata.getPathDisplay(), metadata.getName());
 					child.setLocale(album.getLocale());
 					album.addAlbum(child);
