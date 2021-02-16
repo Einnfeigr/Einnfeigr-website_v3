@@ -5,20 +5,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
 
 public class FileMarkdownHelper implements Helper<Object> {
 
 	private final static Logger log = LoggerFactory.getLogger(FileMarkdownHelper.class);
 	private final static String TEXT_PATH = "/text/%s/";
 	private final static String TEXT_EXTENSION = ".md";
-	private final static PegDownProcessor markdownProcessor = new PegDownProcessor();
+	private final static Parser parser = Parser.builder().build();
+	private final static HtmlRenderer renderer = HtmlRenderer.builder().build();
 	private final static Handlebars handlebars = new Handlebars();
 	
 	@Override
@@ -29,7 +31,7 @@ public class FileMarkdownHelper implements Helper<Object> {
 		}
 		String path = String.format(TEXT_PATH+filename, options.get("locale").toString());
 		String content = readFile(path);
-	    content = markdownProcessor.markdownToHtml(content);
+	    content = renderer.render(parser.parse(content));
 	    if(content.contains("{{") && content.contains("}}")) {
 	    	content = handlebars.compileInline(content).apply(options.context);
 	    }
