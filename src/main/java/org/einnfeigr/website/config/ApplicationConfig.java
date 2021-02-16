@@ -5,6 +5,8 @@ import java.util.Locale;
 
 import org.einnfeigr.website.ArgumentResolver;
 import org.einnfeigr.website.FileMarkdownHelper;
+import org.einnfeigr.website.manager.CachedDropboxManager;
+import org.einnfeigr.website.manager.CmsManager;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mobile.device.DeviceHandlerMethodArgumentResolver;
@@ -16,8 +18,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
+import com.dropbox.core.DbxException;
+import com.dropbox.core.v2.files.ListFolderErrorException;
 import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.MarkdownHelper;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.springmvc.HandlebarsViewResolver;
 
@@ -31,6 +34,11 @@ public class ApplicationConfig implements WebMvcConfigurer {
 		CookieLocaleResolver resolver = new CookieLocaleResolver();
 		resolver.setDefaultLocale(Locale.US);
 		return resolver;
+	}
+	
+	@Bean
+	public CmsManager cmsManager() throws ListFolderErrorException, DbxException {
+		return new CachedDropboxManager();
 	}
 	
 	@Bean
