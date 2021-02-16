@@ -12,6 +12,11 @@ public class Image {
 		this.name = name;
 	}
 
+	public Image(File file) {
+		this.link = LINK_HOME+file.getPath();
+		this.name = file.getName();
+	}
+
 	public String getLink() {
 		return link;
 	}
