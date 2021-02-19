@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,16 +12,21 @@ import org.slf4j.LoggerFactory;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 
 public class FileMarkdownHelper implements Helper<Object> {
 
 	private final static Logger log = LoggerFactory.getLogger(FileMarkdownHelper.class);
 	private final static String TEXT_PATH = "/text/%s/";
 	private final static String TEXT_EXTENSION = ".md";
-	private final static Parser parser = Parser.builder().build();
-	private final static HtmlRenderer renderer = HtmlRenderer.builder().build();
+	private final static DataHolder OPTIONS = new MutableDataSet()
+			.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create()));
+	private final static Parser parser = Parser.builder(OPTIONS).build();
+	private final static HtmlRenderer renderer = HtmlRenderer.builder(OPTIONS).build();
 	private final static Handlebars handlebars = new Handlebars();
 	
 	@Override
@@ -33,7 +39,7 @@ public class FileMarkdownHelper implements Helper<Object> {
 		String content = readFile(path);
 	    content = renderer.render(parser.parse(content));
 	    if(content.contains("{{") && content.contains("}}")) {
-	    	content = handlebars.compileInline(content).apply(options.context);
+	    	content = handlebars.compileInline(content).apply(options.context.get("root"));
 	    }
 	    return new Handlebars.SafeString(content);
 	}
