@@ -13,6 +13,7 @@ import javax.servlet.http.Cookie;
 
 import org.assertj.core.util.Lists;
 import org.einnfeigr.website.manager.DropboxManager;
+import org.einnfeigr.website.util.ControllerUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -214,7 +215,7 @@ class WebsiteApplicationTests {
 			mvc.perform(MockMvcRequestBuilders.get("/fridrum/"+path))
 				.andExpect(MockMvcResultMatchers.status().isNotFound());
 			dropboxManager.createFolder(path);
-			dropboxManager.writeFile(path+"/locales.properties", bytes);
+			dropboxManager.writeFile(path+"/locales.json", bytes);
 			mvc.perform(MockMvcRequestBuilders.get("/fridrum/"+path))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().string(containsString("test")));
