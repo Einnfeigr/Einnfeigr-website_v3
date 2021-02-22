@@ -1,2 +1,2 @@
 cd /home/studiedlist/Documents/projects/einnfeigr/website_III/src/main/resources
-stylus -w styl/common.styl -o static/css/style.css -w styl/light.styl -o static/css/themes/light.css -w styl/dark.styl -o static/css/themes/dark.css -w styl/error.styl -o static/css/error.css -w styl/main.styl -o static/css/main.css -w styl/albums.styl -o static/css/albums.css
+stylus -w styl/common.styl -o static/css/style.css -w styl/light.styl -o static/css/themes/light.css -w styl/dark.styl -o static/css/themes/dark.css -w styl/error.styl -o static/css/error.css -w styl/main.styl -o static/css/main.css -w styl/album.styl -o static/css/album.css -w styl/albums.styl -o static/css/albums.css

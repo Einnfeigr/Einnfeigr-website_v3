@@ -1,12 +1,11 @@
-.content.album
-	header
-		grid-column-start: 1
-		grid-column-end: 3
-	max-width: none
-	width: auto
-	display: grid
-	grid-template-columns: auto 15em
-	grid-template-rows: auto auto
-	.images
-		img
-			height: 15em
+.content.albums
+	.albums
+		display: flex
+		flex-flow: row
+		flex-wrap: wrap
+		.album
+			width: 12em
+			h3
+				text-align: center
+			.preview 
+				max-width: 12em
