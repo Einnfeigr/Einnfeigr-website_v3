@@ -11,14 +11,14 @@ No. Einnfeigr is one man project, so 99.9% of content you see here made on my ow
 Well, your own website is well-organized and customized system for all your needs.  
 You don't have any restrictions and limitations (except of hardware indeed).  
 
+### What is this all about?
+This site is mainly about photos.  
+
 ### Why don't you use social media like Instagram to share your content?
 These services are mostly used to make money, not art.
 I don't want to compete with paid posts.  
 Furthermore, these services are not giving ability to share timeless content:
 posted content is sorted by time, and usually people see only newest things.  
-
-### What is this all about?
-This site is mainly about photos.  
 
 ### What's your site's stack?
 Java with Spring framework, Handlebars, Stylus, JS. You can read more at [about](/about) page.
@@ -42,7 +42,6 @@ While some of settings are usually auto-adjusted well, others needed to be corre
 ### Why there is no people in your videos?
 It's extremely hard to shoot videos with people (imho). 
 You have to organize some sort of scenario, find matching people, gather them, train somehow. 
-I've shoot video with people once, and it's not the best experience I've ever had.  
 
 ### What are these names about? Looks like random symbols
 This is Old-Norsk translation of video name. 
