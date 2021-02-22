@@ -22,7 +22,9 @@ public class AlbumManager {
 	@Autowired
 	private CmsManager cmsManager;
 	
-	public final static String LOCALES_FILE = "locales.properties";
+	public final static String LOCALES_FILE = "locales.json";
+	public final static String PREVIEW_FILE = "preview.";
+	public final static Image PLACEHOLDER = new Image("/img/placeholder.jpg", "placeholder");
 	private final static String LOCALES_ERROR = "Unable to load localized names file for album %s, "
 			+ "nested exception is: ";
 	private final static Logger log = LoggerFactory.getLogger(AlbumManager.class);
@@ -32,10 +34,23 @@ public class AlbumManager {
 		album.setLocale(locale);
 		File file = cmsManager.readFolder(path);
 		for(File child : file.getChildren()) {
-			if(!child.isFolder() && child.getName().equals(LOCALES_FILE)) {
+			if(child.isFolder()) {
+				album.addAlbum(parseAlbum(locale, child.getPath()));
+			} else if(child.getName().equals(LOCALES_FILE)) {
 				album.setLocalizedNames(parseLocalesFile(child));
 			} else if(isImage(child.getName())) {
-				album.addImage(new Image(child));
+				if(child.getName().contains(PREVIEW_FILE)) {
+					album.setPreview(new Image(child));
+				} else {
+					album.addImage(new Image(child));
+				}
+			} 
+		}
+		if(album.getPreview() == null) {
+			if(album.getImages().size() == 0) {
+				album.setPreview(PLACEHOLDER);
+			} else {
+				album.setPreview(album.getImages().get(0));
 			}
 		}
 		return album;

@@ -15,7 +15,9 @@ public class Album {
 	private Map<String, String > localizedNames = new HashMap<>();
 	private List<Album> albums = new ArrayList<>();
 	private List<Image> images = new ArrayList<>();
+
 	private Locale locale;
+	private Image preview;
 	
 	public final static String PATH_HOME = "/fridrum/albums";
 	
@@ -81,12 +83,20 @@ public class Album {
 	public void setLocalizedNames(Map<String, String> localizedNames) {
 		this.localizedNames = localizedNames;
 		if(locale != null) {
-			localizedName = localizedNames.getOrDefault(locale.getLanguage(), name).toString();
+			localizedName = localizedNames.getOrDefault(locale.getLanguage(), name);
 		}
 	}
 
 	public Locale getLocale() {
 		return locale;
+	}
+
+	public Image getPreview() {
+		return preview;
+	}
+
+	public void setPreview(Image preview) {
+		this.preview = preview;
 	}
 	
 }
