@@ -1,4 +1,4 @@
-package org.einnfeigr.website;
+package org.einnfeigr.website.util;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -11,7 +11,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.Device;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -67,6 +66,10 @@ public class ControllerUtils {
 	}
 	
 	public ModelAndView buildMav(String path, Object...params) throws FileNotFoundException {
+		return buildMav(path, arrayToMap(params));
+	}
+	
+	public ModelAndView buildMav(String path, Map<String, Object> params) throws FileNotFoundException {
 		String theme = parseParam(THEME_COOKIE_NAME, THEME_PARAM_NAME);
 		theme = theme == null ? DEFAULT_THEME : theme;
 		String version = parseParam(VERSION_COOKIE_NAME, VERSION_PARAM_NAME);
@@ -80,7 +83,7 @@ public class ControllerUtils {
 				? LIGHT_THEME_NAME : DARK_THEME_NAME);
 		data.put("theme", theme.equals(DARK_THEME_NAME) ? theme : LIGHT_THEME_NAME);
 		data.put("page", path);
-		data.putAll(arrayToMap(params));
+		data.putAll(params);
 		return mav;
 	}
 	

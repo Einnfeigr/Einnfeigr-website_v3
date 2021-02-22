@@ -21,7 +21,8 @@ public class ErrorController extends ResponseEntityExceptionHandler {
 	
 	private final static Logger log = LoggerFactory.getLogger(ErrorController.class);
 	
-	@ExceptionHandler(Throwable.class)
+	@ExceptionHandler(value= {FileNotFoundException.class, IllegalStateException.class, 
+			IllegalArgumentException.class})
 	public ResponseEntity<Object> handle(Exception e, WebRequest request)
 			throws IOException, ServletException {
 		log.info("Handler resolved exception", e);

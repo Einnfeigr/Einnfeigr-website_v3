@@ -1,4 +1,4 @@
-package org.einnfeigr.website;
+package org.einnfeigr.website.util;
 
 import java.util.Locale;
 
