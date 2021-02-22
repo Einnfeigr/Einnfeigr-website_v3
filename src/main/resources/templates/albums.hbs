@@ -1,0 +1,13 @@
+{{#partial "dependencies" }}
+	<link rel="stylesheet" href="/css/albums.css" />
+{{/partial}}
+{{#partial "content" }}
+	{{md "albums" }}
+	<div class="albums">
+		{{#each albums }}
+			{{>parts/albumPreview}}
+		{{/each}}
+	</div>
+{{/partial}}
+
+{{>basis}}

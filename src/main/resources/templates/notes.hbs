@@ -1,0 +1,23 @@
+{{#partial "content" }}
+	{{md "notes"}}
+	<ul>
+		{{#each notes }}
+			<li><a href="/fridrum/notes/{{path}}">{{name}}</a></li>
+		{{/each}} 
+	</ul>
+	
+	<ul>
+		{{#each folders }} 
+			<li>
+				{{name}}
+				<ul>
+					{{#each notes }}
+						<li>{{name}}</li>
+					{{/each}}
+				</ul>
+			</li>
+		{{/each}}	
+	</ul>
+{{/partial }}
+
+{{>basis}}

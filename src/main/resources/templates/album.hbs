@@ -1,23 +1,24 @@
 {{#partial "dependencies" }}
+	<link rel="stylesheet" href="/css/album.css" />
 	<link rel="stylesheet" href="/css/albums.css" />
 {{/partial}}
 {{#partial "content" }}
 	<header>
-		<a href="{{parent.path}}">{{i18n "parent" bundle="text/albums" locale=locale}}</a>
+		<a href="javascript:history.back()">
+			{{i18n "parent" bundle="text/albums" locale=locale}}
+		</a>
+		<h1>{{album.localizedName}}</h1>
+		<h2>{{i18n "nested" bundle="text/albums" locale=locale}}</h2>	
 	</header>
 	<div class="images">
-		<h1>{{name}}</h1>
 		{{#each images }}
 			<img src="{{link}}" />
 		{{/each}}
 	</div>
 	<div class="albums">
-		<h2>{{i18n "nested" bundle="text/albums" locale=locale}}</h2>
-		<ul>
-			{{#each albums }}
-				<li><a href="{{path}}">{{localizedName}}</a></li>
-			{{/each}}
-		</ul>
+		{{#each albums }}
+			{{>parts/albumPreview}}
+		{{/each}}
 	</div>
 {{/partial}}
 
