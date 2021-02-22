@@ -1,5 +1,4 @@
 # About website
-Einnfeigr exists for {{years}} {{months}} {{days}}   
 This is the third iteration of website.
 
 Here is technical comparison of three website versions:
