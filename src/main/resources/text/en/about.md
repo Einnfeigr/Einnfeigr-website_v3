@@ -4,13 +4,13 @@ This is the third iteration of website.
 
 Here is technical comparison of three website versions:
 
- | I | II | III 
-:-:|:--:|:--:|:--:
-Backend|PHP|Java + Spring|Java + Spring
-Markup|HTML|Mustache|Handlebars
-Styles|Css|Css|Stylus
-Script|JS+JQuery|JS+JQuery|JS
-CMS|Server filesystem|Google Drive|Dropbox
+| 	    | I               | II          | III         |
+| ----- | --------------- | ----------- | ----------- | 
+|Backend|PHP              |Java + Spring|Java + Spring|
+|Markup |HTML             |Mustache     |Handlebars   |
+|Styles |Css              |Css          |Stylus       |
+|Script |JS+JQuery        |JS+JQuery    |JS           |
+|CMS    |Server filesystem|Google Drive |Dropbox      |
 
 
 ## Features
@@ -35,4 +35,4 @@ This is kind of CMS, which provides flexible synchronization and content managem
 
 ### No third party trackers
 There is no third parties that can access and collect users info  
-Statistics [metering](#statistics) is server-sided  
+Statistics metering is server-sided  
